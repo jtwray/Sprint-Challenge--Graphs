@@ -135,7 +135,6 @@ def get_neighbors():
 
 def dft(starting_vertex, visited={}):
     global traversal_path
-    print(f'currentroom {player.current_room}')
     visited[player.current_room.id]=True
     newneighbors = {}
     newneighborscount = 0
@@ -167,7 +166,7 @@ def dft(starting_vertex, visited={}):
 
         dft(player.current_room, visited)
 
-    if newneighborscount is 1:
+    if newneighborscount == 1:
 
         if len(nextneighborstack) < 1:
             return
@@ -184,7 +183,6 @@ def dft(starting_vertex, visited={}):
         if len(allforks) == 0:
             return f' where is the mazeeee'
         else:
-            print(f'allforks {allforks}')
             breadcrumbs = allforks[-1][1]
             fork=allforks[-1][0]
             while len(breadcrumbs) != 0:
