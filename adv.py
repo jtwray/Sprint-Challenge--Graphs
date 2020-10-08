@@ -110,7 +110,7 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 
 traversal_path=[]
-visited_rooms={}
+visitedrooms={}
 allforks=[]
 currentroom=0
 nextneighborstack=[]
@@ -143,7 +143,7 @@ def dft(starting_vertex,visited=set()):
         allforks.append((player.current_room,[directiontotravel]))
         traversal_path=[*traversal_path,directiontotravel]
         dft(next_room,visited)
-        
+
     if newneighborscount==1:
         yield
 
@@ -155,39 +155,10 @@ def dft(starting_vertex,visited=set()):
             next_room=lastfork[0]
             if next_room not in visited:
                 visited[next_room]=nextneighborstack
-            walkbackwards=list(reversed(lastfork[1]))
+            walkbackwards=lastfork[1].reverse()
             breadcrumbs=[backtrack[i] for i in walkbackwards]
             traversal_path=[*traversal_path,*breadcrumbs]
             dft(next_room,visited)
-
-
-
-    current_path=[]
-    if starting_vertex in visited:
-        return
-    
-    else:
-        visited[starting_vertex]= player.current_room.get_exits()
-        
-        neighbors= get_neighbors()
-
-        next_room = player.current_room.get_room_in_direction(neighbor)
-        # traversal_path.append(starting_vertex)
-        
-        if len(neighbors)==0:
-            return None
-        
- 
-    for neighbor in get_neighbors():
-
-        if player.current_room.get_room_in_direction(neighbor) in visited:
-            return 
-            traversal_path.append(neighbor)
-            dft(player.current_room.get_room_in_direction(neighbor),visited)
-    
-    return traversal_path
-    
-
 
 
 ## <---------my code to find the traversal path lives above this line------>
