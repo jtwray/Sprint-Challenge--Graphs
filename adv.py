@@ -118,11 +118,20 @@ nextneighborstack=[]
 
 #direction we just came from
 backtrack={"n":"s","s":"n","e":"w","w":"e"}
-
+#
+# there's a hangup with adding the found newneighbors to nextneighborsstack traversal_path and visited_rooms
+# its adding the memorylocation unless i use '.id' on the end in which case i cant get the neighbors .
+# we need the full Room aka sans -(.id) for getting neighbors aka compass direction
+# and we need the number/id for the visited list 
+# maybe we should store them both as a keyvalue pair
+# visited is a dict
+# #
 def get_neighbors():
     return player.current_room.get_exits()
 
-def dft(starting_vertex,traversal_path,visited={}):
+def dft(starting_vertex,visited={}):
+    print(f'PLAYER.CURRENT_ROOM IS>>>>>>>{player.current_room}')
+    global traversal_path
     player.current_room=starting_vertex
     neighbors=get_neighbors()
     newneighbors={}
@@ -143,7 +152,7 @@ def dft(starting_vertex,traversal_path,visited={}):
         directiontotravel=newneighbors[next_room]
         allforks.append((player.current_room.id,[directiontotravel]))
         traversal_path += directiontotravel.__str__()
-        dft(next_room,visited,traversal_path)
+        dft(next_room,visited)
 
     if newneighborscount==1:
         next_room=nextneighborstack.pop(-1)
@@ -169,7 +178,7 @@ def dft(starting_vertex,traversal_path,visited={}):
             dft(next_room,visited)
 
 
-dft(world.starting_room,traversal_path,visited={})
+dft(world.starting_room,visited={})
 print (f'traversal_path{traversal_path}')
 
 ## <---------my code to find the traversal path lives above this line------>
