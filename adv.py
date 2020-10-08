@@ -125,12 +125,17 @@ backtrack={"n":"s","s":"n","e":"w","w":"e"}
 # and we need the number/id for the visited list 
 # maybe we should store them both as a keyvalue pair
 # visited is a dict
-# #
+# i think i need both the room instance and the id 
+# going to try storing the room.id as key and a tuple(roominstance,roomdir) as the value 
+# its a list
+# so store all three as a triplet style tuple that way i can grab them off in order add like a stack
+# [-1]==(room.id,room.dir,room.instance)#
 def get_neighbors():
     return player.current_room.get_exits()
 
 def dft(starting_vertex,visited={}):
     print(f'PLAYER.CURRENT_ROOM IS>>>>>>>{player.current_room}')
+    print(f'starting_vertex IS>>>>>>>{starting_vertex}{type(starting_vertex)}')
     global traversal_path
     player.current_room=starting_vertex
     neighbors=get_neighbors()
@@ -138,13 +143,23 @@ def dft(starting_vertex,visited={}):
     newneighborscount=0
     neighbors_length=len(neighbors)
     for neighbor in neighbors:
+        #
         neighbor_direction=neighbor
+        # prints n, s, e, or w  #
+        # example => e          #
+        print(f'neighbor{neighbor}')
         neighbor_id=player.current_room.get_room_in_direction(neighbor).id
+        # prints the int #
+        #  example => 3  #
         print(f'neighbor_id={neighbor_id}')
         if neighbor_id not in visited:
             nextneighborstack.append(neighbor_id)
+            # prints nextneighborstack[1,5,7,3] #
+            print(f'nextneighborstack{nextneighborstack}')
             newneighborscount+=1
             newneighbors[neighbor_id]=neighbor
+            #prints newneighbors{1: 'n', 5: 's', 7: 'w', 3: 'e'} #
+            print(f'newneighbors{newneighbors}')
 
     if neighbors_length>=3 and newneighborscount>=1:
         next_room=nextneighborstack.pop(-1)
@@ -161,6 +176,7 @@ def dft(starting_vertex,visited={}):
         allforks[-1][1].append(directiontotravel)
         traversal_path=[*traversal_path,directiontotravel]
         dft(next_room.id,visited,traversal_path)
+
     return print(f'player.current_room|{player.current_room.id}|\n traversal_path| {traversal_path}|\n visited| {visited} | \n newneighbors | {newneighbors} |\n\n')
    
 
