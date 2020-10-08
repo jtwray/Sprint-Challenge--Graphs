@@ -122,30 +122,38 @@ backtrack={"n":"s","s":"n","e":"w","w":"e"}
 def get_neighbors():
     return player.current_room.get_exits()
 
-def dft(starting_vertex,visited=set()):
+def dft(starting_vertex,traversal_path,visited={}):
     player.current_room=starting_vertex
     neighbors=get_neighbors()
     newneighbors={}
     newneighborscount=0
-
+    neighbors_length=len(neighbors)
     for neighbor in neighbors:
         neighbor_direction=neighbor
-        neighbor_id=player.current_room.get_room_in_direction(neighbor)
+        neighbor_id=player.current_room.get_room_in_direction(neighbor).id
+        print(f'neighbor_id={neighbor_id}')
         if neighbor_id not in visited:
             nextneighborstack.append(neighbor_id)
             newneighborscount+=1
             newneighbors[neighbor_id]=neighbor
 
-    if neighbors>=3 and newneighborscount>=1:
+    if neighbors_length>=3 and newneighborscount>=1:
         next_room=nextneighborstack.pop(-1)
         visited[next_room]=nextneighborstack
         directiontotravel=newneighbors[next_room]
-        allforks.append((player.current_room,[directiontotravel]))
-        traversal_path=[*traversal_path,directiontotravel]
-        dft(next_room,visited)
+        allforks.append((player.current_room.id,[directiontotravel]))
+        traversal_path += directiontotravel.__str__()
+        dft(next_room,visited,traversal_path)
 
     if newneighborscount==1:
-        yield
+        next_room=nextneighborstack.pop(-1)
+        visited[next_room]=nextneighborstack
+        directiontotravel=newneighbors[next_room]
+        allforks[-1][1].append(directiontotravel)
+        traversal_path=[*traversal_path,directiontotravel]
+        dft(next_room.id,visited,traversal_path)
+    return print(f'player.current_room|{player.current_room.id}|\n traversal_path| {traversal_path}|\n visited| {visited} | \n newneighbors | {newneighbors} |\n\n')
+   
 
     if newneighborscount==0:
         if len(allforks) is None:
@@ -160,6 +168,9 @@ def dft(starting_vertex,visited=set()):
             traversal_path=[*traversal_path,*breadcrumbs]
             dft(next_room,visited)
 
+
+dft(world.starting_room,traversal_path,visited={})
+print (f'traversal_path{traversal_path}')
 
 ## <---------my code to find the traversal path lives above this line------>
 ## <--------- test config lives down there below this line------>
