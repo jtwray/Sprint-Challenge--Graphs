@@ -12,8 +12,8 @@ world = World()
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+# map_file = "maps/test_loop_fork.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph = literal_eval(open(map_file, "r").read())
@@ -110,7 +110,6 @@ currentroom = 0
 # stack of tuples (room.instance,room.dir,room.id) #
 nextneighborstack = []
 
-
 # direction we just came from
 backtrack = {"n": "s", "s": "n", "e": "w", "w": "e"}
 #
@@ -142,12 +141,8 @@ def dft(starting_vertex, visited={}):
     newneighborscount = 0
     neighbors = get_neighbors()
     neighbors_length = len(neighbors)
-    print(f'traversal_path:{traversal_path} || visited{visited}')
-    print(f'neighbors',neighbors)
-    print(f'nextneighborstackbefore count {nextneighborstack} || newneighborscount {newneighborscount}')
     countednewneighbors=False
     if len(nextneighborstack) < 1 and newneighborscount is None and visited is not None:
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~allldonnnnne')
         return visited
     for nbr in nextneighborstack:
         if nbr[0] in visited:
@@ -158,23 +153,18 @@ def dft(starting_vertex, visited={}):
         if nbr_id not in visited:
             nextneighborstack.append((nbr_id, nbr_direction))
             newneighborscount += 1
-            print(f'nextneighborstack in forloop count{nextneighborstack} || newneighborscount {newneighborscount}')
         if nbr is neighbors[-1]:
             countednewneighbors=True
-            print(f'countednewneighbors{countednewneighbors}')
+            
 
     if neighbors_length >= 3 and newneighborscount >= 1:
-        print(f'BEFORE popped lastnieghbor{nextneighborstack} newneighborscount{newneighborscount} BEFORE')
         next_room = nextneighborstack.pop()
-        print(f'AFTER popped lastnieghbor{nextneighborstack} newneighborscount{newneighborscount}AFTER')
-
-        print(f'AFTER popped lastnieghbor==> {nextneighborstack}')
         direction_to_travel = next_room[1]
         visited[next_room[0]] = next_room
         traversal_path += direction_to_travel
         allforks.append((player.current_room.id, [direction_to_travel]))
         player.travel(direction_to_travel)
-        print(f'allforks{allforks}')
+
         dft(player.current_room, visited)
 
     if newneighborscount is 1:
