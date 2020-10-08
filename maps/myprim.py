@@ -1,12 +1,6 @@
 
-    def dfs_recursive(self, starting_vertex, destination_vertex, visited=set(), path=[]):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
+def dfs_recursive(self, starting_vertex, destination_vertex, visited=set(), path=[]):
 
-        This should be done using recursion.
-        """
         if len(path) == 0:
             path.append(starting_vertex)
         # base case?
@@ -66,3 +60,79 @@ base_case
 
 
 """
+
+
+"""
+
+visited = []
+ neighborstovisit=[]
+
+ pathsofar=[]
+ pathfromlastfork=[]
+ pathbacktolastfork=pathfromlastfork.reverse()
+
+
+"""
+
+"""
+
+from first room
+
+check for neighbors
+
+neighbors ={}
+
+neighbor key value = neighborid : neighbor.exits
+
+traversal_order=[]
+
+append current_room to traversal_order
+
+checkVisitedforNextNeighbor()
+current_room = neighbors[-1]
+neightbors[-1] in visited?
+    neigbors.pop()
+    checkVisited(current_room)
+else:
+    current_room =  neighbors.pop()
+
+    
+
+
+"""
+
+ #the entire path ['n','n','e','w','n','n','w','s','n','e','n'....]
+traversal_path=[]
+
+#directionwe just came from
+backtrack={"n":"s","s":"n","e":"w","w":"e"}
+
+#path we are currently exploring
+cur_path_tracker= []
+
+#current_room.id:current_room.get_exits()
+visited={}
+visited[player.current_room.id]= player.current_room.get_exits()
+
+def get_neighbors():
+    return player.current_room.get_exits()
+
+def dft(starting_vertex,visited=set()):
+    
+    print(f'current_vertex:{starting_vertex}')
+    print(f'player.current_room:{player.current_room}')
+    if starting_vertex in visited:
+        return
+    
+    else:
+        visited.add(starting_vertex)
+        traversal_path.append(starting_vertex)
+        neighbors= get_neighbors()
+        
+        if len(neighbors)==0:
+            return None
+        
+        for neighbor in get_neighbors():
+            dft(neighbor,visited)
+    
+    return traversal_path
