@@ -124,22 +124,41 @@ def get_neighbors():
 
 def dft(starting_vertex,visited=set()):
     player.current_room=starting_vertex
-    newneighbors=get_neighbors()
+    neighbors=get_neighbors()
+    newneighbors={}
     newneighborscount=0
-    for neighbor in newneighbors:
-        if neighbor not in visited:
-            nextneighborstack.append(player.current_room.get_room_in_direction(neighbor))
+
+    for neighbor in neighbors:
+        neighbor_direction=neighbor
+        neighbor_id=player.current_room.get_room_in_direction(neighbor)
+        if neighbor_id not in visited:
+            nextneighborstack.append(neighbor_id)
             newneighborscount+=1
-    
+            newneighbors[neighbor_id]=neighbor
+
+    if neighbors>=3 and newneighborscount>=1:
+        next_room=nextneighborstack.pop(-1)
+        visited[next_room]=nextneighborstack
+        directiontotravel=newneighbors[next_room]
+        allforks.append((player.current_room,[directiontotravel]))
+        traversal_path=[*traversal_path,directiontotravel]
+        dft(next_room,visited)
+        
+    if newneighborscount==1:
+        yield
+
     if newneighborscount==0:
         if len(allforks) is None:
             return f'wheres the maze dude'
         else:
             lastfork=allforks.pop(-1)
-            walkbackwards=list(reversed(lastfork))
+            next_room=lastfork[0]
+            if next_room not in visited:
+                visited[next_room]=nextneighborstack
+            walkbackwards=list(reversed(lastfork[1]))
             breadcrumbs=[backtrack[i] for i in walkbackwards]
             traversal_path=[*traversal_path,*breadcrumbs]
-            dft()
+            dft(next_room,visited)
 
 
 
